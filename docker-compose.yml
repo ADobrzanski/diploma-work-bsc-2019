@@ -7,8 +7,10 @@ services:
       - mongo
     restart: always
     build: .
+    volumes:
+      - ./src:/app/src
     ports:
-      - '3000:3000'
+      - '4000:4000'
   prisma:
     container_name: prisma_server
     image: prismagraphql/prisma:1.34

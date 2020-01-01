@@ -4,6 +4,7 @@ type User {
   updatedAt: DateTime! @updatedAt
   name: String! @unique
   email: String! @unique
+  password: String!
   uploads: [Score!]! @relation(link: INLINE, name: "Ownerships")
   sharedWith: [Score!]! @relation(link: INLINE, name: "Shares")
   public: Boolean!

@@ -167,6 +167,8 @@ export type UserOrderByInput =
   | "name_DESC"
   | "email_ASC"
   | "email_DESC"
+  | "password_ASC"
+  | "password_DESC"
   | "public_ASC"
   | "public_DESC";
 
@@ -175,6 +177,7 @@ export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 export interface UserUpdateWithoutUploadsDataInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
+  password?: Maybe<String>;
   sharedWith?: Maybe<ScoreUpdateManyWithoutSharedToInput>;
   public?: Maybe<Boolean>;
 }
@@ -199,6 +202,7 @@ export interface UserCreateWithoutSharedWithInput {
   id?: Maybe<ID_Input>;
   name: String;
   email: String;
+  password: String;
   uploads?: Maybe<ScoreCreateManyWithoutOwnerInput>;
   public: Boolean;
 }
@@ -237,6 +241,7 @@ export interface ScoreCreateWithoutOwnerInput {
 export interface UserUpdateManyMutationInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
+  password?: Maybe<String>;
   public?: Maybe<Boolean>;
 }
 
@@ -253,6 +258,7 @@ export interface UserCreateInput {
   id?: Maybe<ID_Input>;
   name: String;
   email: String;
+  password: String;
   uploads?: Maybe<ScoreCreateManyWithoutOwnerInput>;
   sharedWith?: Maybe<ScoreCreateManyWithoutSharedToInput>;
   public: Boolean;
@@ -268,6 +274,7 @@ export interface UserUpdateOneRequiredWithoutUploadsInput {
 export interface UserUpdateManyDataInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
+  password?: Maybe<String>;
   public?: Maybe<Boolean>;
 }
 
@@ -475,6 +482,20 @@ export interface UserWhereInput {
   email_not_starts_with?: Maybe<String>;
   email_ends_with?: Maybe<String>;
   email_not_ends_with?: Maybe<String>;
+  password?: Maybe<String>;
+  password_not?: Maybe<String>;
+  password_in?: Maybe<String[] | String>;
+  password_not_in?: Maybe<String[] | String>;
+  password_lt?: Maybe<String>;
+  password_lte?: Maybe<String>;
+  password_gt?: Maybe<String>;
+  password_gte?: Maybe<String>;
+  password_contains?: Maybe<String>;
+  password_not_contains?: Maybe<String>;
+  password_starts_with?: Maybe<String>;
+  password_not_starts_with?: Maybe<String>;
+  password_ends_with?: Maybe<String>;
+  password_not_ends_with?: Maybe<String>;
   uploads_some?: Maybe<ScoreWhereInput>;
   sharedWith_some?: Maybe<ScoreWhereInput>;
   public?: Maybe<Boolean>;
@@ -565,6 +586,7 @@ export interface ScoreScalarWhereInput {
 export interface UserUpdateInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
+  password?: Maybe<String>;
   uploads?: Maybe<ScoreUpdateManyWithoutOwnerInput>;
   sharedWith?: Maybe<ScoreUpdateManyWithoutSharedToInput>;
   public?: Maybe<Boolean>;
@@ -602,6 +624,7 @@ export interface UserCreateWithoutUploadsInput {
   id?: Maybe<ID_Input>;
   name: String;
   email: String;
+  password: String;
   sharedWith?: Maybe<ScoreCreateManyWithoutSharedToInput>;
   public: Boolean;
 }
@@ -629,6 +652,7 @@ export interface ScoreUpdateManyWithoutOwnerInput {
 export interface UserUpdateWithoutSharedWithDataInput {
   name?: Maybe<String>;
   email?: Maybe<String>;
+  password?: Maybe<String>;
   uploads?: Maybe<ScoreUpdateManyWithoutOwnerInput>;
   public?: Maybe<Boolean>;
 }
@@ -738,6 +762,20 @@ export interface UserScalarWhereInput {
   email_not_starts_with?: Maybe<String>;
   email_ends_with?: Maybe<String>;
   email_not_ends_with?: Maybe<String>;
+  password?: Maybe<String>;
+  password_not?: Maybe<String>;
+  password_in?: Maybe<String[] | String>;
+  password_not_in?: Maybe<String[] | String>;
+  password_lt?: Maybe<String>;
+  password_lte?: Maybe<String>;
+  password_gt?: Maybe<String>;
+  password_gte?: Maybe<String>;
+  password_contains?: Maybe<String>;
+  password_not_contains?: Maybe<String>;
+  password_starts_with?: Maybe<String>;
+  password_not_starts_with?: Maybe<String>;
+  password_ends_with?: Maybe<String>;
+  password_not_ends_with?: Maybe<String>;
   public?: Maybe<Boolean>;
   public_not?: Maybe<Boolean>;
   AND?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
@@ -771,6 +809,7 @@ export interface UserPreviousValues {
   updatedAt: DateTimeOutput;
   name: String;
   email: String;
+  password: String;
   public: Boolean;
 }
 
@@ -782,6 +821,7 @@ export interface UserPreviousValuesPromise
   updatedAt: () => Promise<DateTimeOutput>;
   name: () => Promise<String>;
   email: () => Promise<String>;
+  password: () => Promise<String>;
   public: () => Promise<Boolean>;
 }
 
@@ -793,6 +833,7 @@ export interface UserPreviousValuesSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   name: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
   public: () => Promise<AsyncIterator<Boolean>>;
 }
 
@@ -823,6 +864,7 @@ export interface User {
   updatedAt: DateTimeOutput;
   name: String;
   email: String;
+  password: String;
   public: Boolean;
 }
 
@@ -832,6 +874,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   updatedAt: () => Promise<DateTimeOutput>;
   name: () => Promise<String>;
   email: () => Promise<String>;
+  password: () => Promise<String>;
   uploads: <T = FragmentableArray<Score>>(args?: {
     where?: ScoreWhereInput;
     orderBy?: ScoreOrderByInput;
@@ -861,6 +904,7 @@ export interface UserSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   name: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
   uploads: <T = Promise<AsyncIterator<ScoreSubscription>>>(args?: {
     where?: ScoreWhereInput;
     orderBy?: ScoreOrderByInput;
@@ -890,6 +934,7 @@ export interface UserNullablePromise
   updatedAt: () => Promise<DateTimeOutput>;
   name: () => Promise<String>;
   email: () => Promise<String>;
+  password: () => Promise<String>;
   uploads: <T = FragmentableArray<Score>>(args?: {
     where?: ScoreWhereInput;
     orderBy?: ScoreOrderByInput;

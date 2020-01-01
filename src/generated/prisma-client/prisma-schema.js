@@ -430,6 +430,7 @@ type User {
   updatedAt: DateTime!
   name: String!
   email: String!
+  password: String!
   uploads(where: ScoreWhereInput, orderBy: ScoreOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Score!]
   sharedWith(where: ScoreWhereInput, orderBy: ScoreOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Score!]
   public: Boolean!
@@ -445,6 +446,7 @@ input UserCreateInput {
   id: ID
   name: String!
   email: String!
+  password: String!
   uploads: ScoreCreateManyWithoutOwnerInput
   sharedWith: ScoreCreateManyWithoutSharedToInput
   public: Boolean!
@@ -464,6 +466,7 @@ input UserCreateWithoutSharedWithInput {
   id: ID
   name: String!
   email: String!
+  password: String!
   uploads: ScoreCreateManyWithoutOwnerInput
   public: Boolean!
 }
@@ -472,6 +475,7 @@ input UserCreateWithoutUploadsInput {
   id: ID
   name: String!
   email: String!
+  password: String!
   sharedWith: ScoreCreateManyWithoutSharedToInput
   public: Boolean!
 }
@@ -492,6 +496,8 @@ enum UserOrderByInput {
   name_DESC
   email_ASC
   email_DESC
+  password_ASC
+  password_DESC
   public_ASC
   public_DESC
 }
@@ -502,6 +508,7 @@ type UserPreviousValues {
   updatedAt: DateTime!
   name: String!
   email: String!
+  password: String!
   public: Boolean!
 }
 
@@ -564,6 +571,20 @@ input UserScalarWhereInput {
   email_not_starts_with: String
   email_ends_with: String
   email_not_ends_with: String
+  password: String
+  password_not: String
+  password_in: [String!]
+  password_not_in: [String!]
+  password_lt: String
+  password_lte: String
+  password_gt: String
+  password_gte: String
+  password_contains: String
+  password_not_contains: String
+  password_starts_with: String
+  password_not_starts_with: String
+  password_ends_with: String
+  password_not_ends_with: String
   public: Boolean
   public_not: Boolean
   AND: [UserScalarWhereInput!]
@@ -590,6 +611,7 @@ input UserSubscriptionWhereInput {
 input UserUpdateInput {
   name: String
   email: String
+  password: String
   uploads: ScoreUpdateManyWithoutOwnerInput
   sharedWith: ScoreUpdateManyWithoutSharedToInput
   public: Boolean
@@ -598,12 +620,14 @@ input UserUpdateInput {
 input UserUpdateManyDataInput {
   name: String
   email: String
+  password: String
   public: Boolean
 }
 
 input UserUpdateManyMutationInput {
   name: String
   email: String
+  password: String
   public: Boolean
 }
 
@@ -634,6 +658,7 @@ input UserUpdateOneRequiredWithoutUploadsInput {
 input UserUpdateWithoutSharedWithDataInput {
   name: String
   email: String
+  password: String
   uploads: ScoreUpdateManyWithoutOwnerInput
   public: Boolean
 }
@@ -641,6 +666,7 @@ input UserUpdateWithoutSharedWithDataInput {
 input UserUpdateWithoutUploadsDataInput {
   name: String
   email: String
+  password: String
   sharedWith: ScoreUpdateManyWithoutSharedToInput
   public: Boolean
 }
@@ -720,6 +746,20 @@ input UserWhereInput {
   email_not_starts_with: String
   email_ends_with: String
   email_not_ends_with: String
+  password: String
+  password_not: String
+  password_in: [String!]
+  password_not_in: [String!]
+  password_lt: String
+  password_lte: String
+  password_gt: String
+  password_gte: String
+  password_contains: String
+  password_not_contains: String
+  password_starts_with: String
+  password_not_starts_with: String
+  password_ends_with: String
+  password_not_ends_with: String
   uploads_some: ScoreWhereInput
   sharedWith_some: ScoreWhereInput
   public: Boolean
