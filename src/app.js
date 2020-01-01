@@ -10,7 +10,7 @@ const prismaTypeDefs = require('./generated/prisma-client/prisma-schema').typeDe
 const getUser = token => {
   try {
     if (token) {
-      return jwt.verify(token, 'my-secret-from-env-file-in-prod')
+      return jwt.verify(token, process.env.JWT_SECRET)
     }
     return null
   } catch (err) {

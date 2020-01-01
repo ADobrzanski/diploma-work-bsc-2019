@@ -11,6 +11,8 @@ services:
       - ./src:/app/src
     ports:
       - '4000:4000'
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
   prisma:
     container_name: prisma_server
     image: prismagraphql/prisma:1.34
