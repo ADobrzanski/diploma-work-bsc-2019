@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
   scalar Date
@@ -6,12 +6,16 @@ const typeDefs = gql`
   scalar DateTime
 
   type Query {
-    me: User!
+    me: User
+    publicScores: [Score!]
+    searchScores(phrase: String!): [Score!]
+    myScores: [Score!]
   }
 
   type Mutation {
     register(name: String! email: String! password: String!): User!
     login(name: String! password: String!): LoginResponse!
+    uploadScore(score: ScoreInput! file: Upload!): Score!
   }
 
   type LoginResponse {
@@ -31,18 +35,36 @@ const typeDefs = gql`
     public: Boolean
   }
 
+  input UserInput {
+    id: ID
+    name: String
+    email: String
+    password: String
+    public: Boolean
+  }
+
   type Score {
     id: ID
     createdAt: DateTime
     updatedAt: DateTime
     title: String
+    subtitle: String
     composer: String
     lyricist: String
     owner: User
     private: Boolean
     sharedTo: [User]
+    link: String
   }
 
+  input ScoreInput {
+    id: ID
+    title: String
+    subtitle: String
+    composer: String
+    lyricist: String
+    private: Boolean
+  }
 `;
 
 exports.typeDefs = typeDefs;
