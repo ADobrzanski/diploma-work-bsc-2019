@@ -1,4 +1,6 @@
 node_modules
-.env
+*.env
 .gitignore
 npm_debug.log
+local_dev
+*.sql

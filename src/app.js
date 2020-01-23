@@ -1,11 +1,15 @@
-const { ApolloServer } = require('apollo-server');
-const { Prisma } = require('prisma-binding');
+const { ApolloServer } = require('apollo-server-express');
 const jwt = require('jsonwebtoken');
+const { existsSync, mkdirSync } = require("fs");
+const express = require("express");
+const path = require("path");
+const cors = require("cors");
+const query = require('./db/query');
+const mutation = require('./db/mutation');
 
 
 const { resolvers } = require('./resolvers');
 const { typeDefs } = require('./typeDefs');
-const prismaTypeDefs = require('./generated/prisma-client/prisma-schema').typeDefs;
 
 const getUser = token => {
   try {
@@ -29,16 +33,39 @@ const server = new ApolloServer({
     return {
       req,
       user,
-      prisma: new Prisma({
-        typeDefs: prismaTypeDefs,
-        endpoint: 'http://prisma_server:4466'
-      })
+      db: {
+        query,
+        mutation,
+      }
     };
   }
 });
 
+existsSync(path.join(__dirname, "./scores")) || mkdirSync(path.join(__dirname, "./scores"));
+
+const app = express();
+
+/* const allowedOrigins = [
+  'http://localhost:8081',
+  'http://localhost:4000',
+  'http://localhost:4466',
+]
+const corsOptions = {
+  origin: function(origin, callback){
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+} */
+app.use(cors());
+
+app.use("/scores", express.static(path.join(__dirname, "./scores")));
+server.applyMiddleware({ app, cors: false });
 
 
-server.listen().then(({ url }) => {
-  console.log(`Server ready at ${url}`);
+app.listen(4000, () => {
+  console.log(`🚀  Server ready at http://localhost:4000/`);
 });
