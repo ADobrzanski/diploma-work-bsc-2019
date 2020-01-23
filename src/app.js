@@ -1,19 +1,15 @@
 const { ApolloServer } = require('apollo-server-express');
-const { Prisma } = require('prisma-binding');
 const jwt = require('jsonwebtoken');
 const { existsSync, mkdirSync } = require("fs");
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
-
-
 const query = require('./db/query');
 const mutation = require('./db/mutation');
 
 
 const { resolvers } = require('./resolvers');
 const { typeDefs } = require('./typeDefs');
-const prismaTypeDefs = require('./generated/prisma-client/prisma-schema').typeDefs;
 
 const getUser = token => {
   try {

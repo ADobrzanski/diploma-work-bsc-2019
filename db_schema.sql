@@ -74,7 +74,7 @@ CREATE TABLE public.scores (
     lyricist character varying(50),
     owner_id bigint NOT NULL,
     private boolean DEFAULT false NOT NULL,
-    link character varying(200) NOT NULL
+    object_key character varying(200) NOT NULL
 );
 
 

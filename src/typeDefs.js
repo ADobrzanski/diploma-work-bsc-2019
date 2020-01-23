@@ -54,6 +54,7 @@ const typeDefs = gql`
     owner: User
     private: Boolean
     sharedTo: [User]
+    object_key: String
     link: String
   }
 

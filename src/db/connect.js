@@ -2,8 +2,7 @@
 const { Pool } = require('pg')
 
 const pool = new Pool({
-  // TODO move DB_NAME to DB_URI in docker-compose
-  connectionString: process.env.DB_URI + '/diploma_work', 
+  connectionString: process.env.DB_URI, 
 })
 
 const transaction = async (transactionBody) => {

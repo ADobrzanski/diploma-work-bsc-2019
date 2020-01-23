@@ -27,20 +27,14 @@ const scoresPublic = () => ({
 })
 
 const searchScores = (phrase) => {
-  const queryyy = ({
+  return ({
   text:
     `SELECT * ` +
     `FROM ${SCORE} ` +
     `WHERE ${schemaOf[SCORE].f_title} LIKE '%' || $1 || '%' ` +
     `OR ${schemaOf[SCORE].f_composer} LIKE '%' || $1 || '%' `,
-//    `UNION ` +
-//    `(SELECT *, GREATEST(title <-> $1, composer <-> $1) AS rank0 ` +
-//    `FROM ${SCORE}) ` +
-//    `ORDER BY rank0 DESC`, 
   values: [phrase]
 })
-  console.log(queryyy)
-  return queryyy
 }
 
 const scoresByOwnerId = (id) => ({

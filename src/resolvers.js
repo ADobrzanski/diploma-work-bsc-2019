@@ -5,21 +5,7 @@ const {
 } = require("graphql-iso-date");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { createWriteStream } = require("fs");
-const path = require("path"); 
-const uuidv4 = require('uuid/v4');
-
-const uploadToStorage = async (stream) => {
-  const filename = uuidv4();
-  await new Promise(res =>
-    stream
-      .pipe(createWriteStream(path.join(__dirname, "./scores", filename )))
-      .on("finish", () => { console.log('write close!'); res(); })
-      .on('error', res)
-  );
-
-  return `http://localhost:4000/scores/${filename}`;
-}
+const { uploadToStorage, getResourceUrl } = require('./storage')
 
 const resolvers = {
   Date: GraphQLDate,
@@ -85,11 +71,11 @@ const resolvers = {
       const { createReadStream } = await file;
       const stream = createReadStream();
 
-      const link = await uploadToStorage(stream);
+      const object_key =  await uploadToStorage(stream);
 
       const result = await db.mutation.createScore({
         ...score,
-        link,
+        object_key,
         owner_id: user.id
       });
 
@@ -101,7 +87,8 @@ const resolvers = {
     owner: async (parent, _, { db }) => {
       const res = await db.query.getUserById(parent.owner_id)
       return res.rows ? res.rows[0] : null;
-    }
+    },
+    link: parent => getResourceUrl(parent.object_key),
   }
 }
 

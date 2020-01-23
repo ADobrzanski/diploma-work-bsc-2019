@@ -1,0 +1,1 @@
+docker run -it --rm -v /d/Data/Projects/W04-2019-235945-praca-dyplomowa/diploma-work-bsc-2019/src:/app/src --publish 4000:4000 --env-file ./RDS_only.env --name API api sh

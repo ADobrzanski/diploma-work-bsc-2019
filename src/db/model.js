@@ -28,7 +28,7 @@ const schemaOf = {
     f_lyricist: 'lyricist',
     f_ownerId: 'owner_id',
     f_isPrivate: 'private',
-    f_link: 'link',
+    f_objectKey: 'object_key',
   },
   [CREDENTIAL]: {
     f_user_id: 'user_id',
