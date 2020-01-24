@@ -17,7 +17,8 @@ const uploadToAPIServer = async (stream) => {
   return filename;
 }
 
-const getLocalResourceUrl = object_key => `http://localhost:4000/${object_key}`
+const PORT = process.env.PORT || 4000;
+const getLocalResourceUrl = object_key => `http://localhost:${PORT}/${object_key}`
 
 const uploadToAWSbucket = async (stream) => {
   const filename = uuidv4();

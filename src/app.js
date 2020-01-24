@@ -1,3 +1,5 @@
+const PORT = process.env.PORT || 4000;
+
 const { ApolloServer } = require('apollo-server-express');
 const jwt = require('jsonwebtoken');
 const { existsSync, mkdirSync } = require("fs");
@@ -66,6 +68,6 @@ app.use("/scores", express.static(path.join(__dirname, "./scores")));
 server.applyMiddleware({ app, cors: false });
 
 
-app.listen(4000, () => {
-  console.log(`🚀  Server ready at http://localhost:4000/`);
+app.listen(PORT, () => {
+  console.log(`🚀  Server ready at port ${PORT}`);
 });
