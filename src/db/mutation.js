@@ -1,6 +1,6 @@
 const { query, transaction } = require('./connect')
 const { tables, schemaOf } = require('./model')
-const { USER, SCORE, CREDENTIAL } = tables;
+const { USER, SCORE, CREDENTIAL, FAVOURITE } = tables;
 
 const { pick, reject } = require('./utils')
 
@@ -48,7 +48,36 @@ const createScore = (scoreDetails) => {
   })
 }
 
+const createFavourite = (userId, scoreId) => {
+  const { f_user_id, f_score_id } = schemaOf[FAVOURITE]
+  return ({
+    text:
+      `INSERT INTO ${FAVOURITE}(${f_user_id}, ${f_score_id}) ` +
+      `VALUES($1, $2) ` +
+      `ON CONFLICT (${f_user_id}) DO NOTHING;`,
+    values: [userId, scoreId]
+  })
+}
+
+const removeFavourite = (userId, scoreId) => {
+  const { f_user_id, f_score_id } = schemaOf[FAVOURITE]
+  return ({
+    text:
+      `DELETE FROM ${FAVOURITE} ` +
+      `WHERE ${f_user_id} = $1 AND ${f_score_id} = $2`,
+    values: [userId, scoreId]
+  })
+}
+
+
 module.exports = {
   createUser(name, email, password) { return transaction(createUser(name, email, password))},
-  createScore(scoreDetails) { return query(createScore(scoreDetails))}
+  createScore(scoreDetails) { return query(createScore(scoreDetails))},
+  setFavourite(userId, scoreId, favourite) {
+    if (favourite) {
+      return query(createFavourite(userId, scoreId))
+    } else {
+      return queue(removeFavourite(userId, scoreId))
+    }
+  }
 }

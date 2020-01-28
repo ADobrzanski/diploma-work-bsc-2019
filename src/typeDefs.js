@@ -10,12 +10,14 @@ const typeDefs = gql`
     publicScores: [Score!]
     searchScores(phrase: String!): [Score!]
     myScores: [Score!]
+    myFavourites: [Score!]
   }
 
   type Mutation {
     register(name: String! email: String! password: String!): User!
     login(name: String! password: String!): LoginResponse!
     uploadScore(score: ScoreInput! file: Upload!): Score!
+    setFavourite(scoreId: Int! favourite: Boolean!): Score!
   }
 
   type LoginResponse {
@@ -26,7 +28,7 @@ const typeDefs = gql`
   type User {
     id: ID
     createdAt: DateTime
-    updatedAt: DateTime
+    updatedAt: DateTime #TODO - remove?
     name: String
     email: String
     password: String
@@ -36,7 +38,7 @@ const typeDefs = gql`
   }
 
   input UserInput {
-    id: ID
+    id: ID #TODO - remove?
     name: String
     email: String
     password: String
@@ -46,15 +48,16 @@ const typeDefs = gql`
   type Score {
     id: ID
     createdAt: DateTime
-    updatedAt: DateTime
+    updatedAt: DateTime #TODO - remove?
     title: String
     subtitle: String
     composer: String
     lyricist: String
     owner: User
     private: Boolean
+    favourite: Boolean
     sharedTo: [User]
-    object_key: String
+    object_key: String #TODO - remove?
     link: String
   }
 

@@ -5,7 +5,8 @@ const {
 } = require("graphql-iso-date");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { uploadToStorage, getResourceUrl } = require('./storage')
+const { uploadToStorage, getResourceUrl } = require('./storage');
+const { query } = require('./db/connect');
 
 const resolvers = {
   Date: GraphQLDate,
@@ -30,7 +31,9 @@ const resolvers = {
     searchScores: async (_, { phrase }, { db }) => {
       const res = await db.query.searchScores(phrase);
       return res.rows;
-    }
+    },
+    myFavourites: async (_, args, { db, user}) =>
+      await db.query.favouriteScores(user.id),
   },
 
   Mutation: {
@@ -81,9 +84,23 @@ const resolvers = {
 
       return result.rows ? result.rows[0] : null;
     },
+    setFavourite: async (_, { scoreId, favourite }, { db, user }) => {
+      return await db.mutation.setFavourite(user.id, scoreId, favourite);
+    }
   },
 
   Score: {
+    favourite: async (parent, _, { db, user }) => {
+      if (!user) return null;
+      if (!parent.id) return null;
+
+      const res = await query(
+        `SELECT 1 FROM scores S INNER JOIN favourites F ON (S.id = F.score_id)`
+      )
+
+      if (res.rows.length > 0) { return true; }
+      else { return false; }
+    },
     owner: async (parent, _, { db }) => {
       const res = await db.query.getUserById(parent.owner_id)
       return res.rows ? res.rows[0] : null;
