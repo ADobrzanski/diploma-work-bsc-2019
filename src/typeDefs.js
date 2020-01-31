@@ -1,6 +1,7 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
+  scalar Upload
   scalar Date
   scalar Time
   scalar DateTime
@@ -10,7 +11,6 @@ const typeDefs = gql`
     publicScores: [Score!]
     searchScores(phrase: String!): [Score!]
     myScores: [Score!]
-    myFavourites: [Score!]
   }
 
   type Mutation {
@@ -27,14 +27,11 @@ const typeDefs = gql`
 
   type User {
     id: ID
-    createdAt: DateTime
-    updatedAt: DateTime #TODO - remove?
     name: String
     email: String
     password: String
+    favourites(search: String): [Score]
     uploads: [Score]
-    sharedWith: [Score]
-    public: Boolean
   }
 
   input UserInput {
@@ -47,8 +44,6 @@ const typeDefs = gql`
 
   type Score {
     id: ID
-    createdAt: DateTime
-    updatedAt: DateTime #TODO - remove?
     title: String
     subtitle: String
     composer: String

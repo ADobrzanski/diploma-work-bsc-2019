@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { uploadToStorage, getResourceUrl } = require('./storage');
 const { query } = require('./db/connect');
+const joinMonster = require('join-monster').default;
 
 const resolvers = {
   Date: GraphQLDate,
@@ -14,10 +15,11 @@ const resolvers = {
   DateTime: GraphQLDateTime,
 
   Query: {
-    me: async (_, args, { db, user }) => {
-      if (!user){ throw new Error('Not Authenticated'); } 
-      const res = await db.query.getUserById(user.id);
-      return res.rows ? res.rows[0] : null;
+    me: async (_, args, ctx, info) => {
+      if (!ctx.user){ throw new Error('Not Authenticated'); } 
+      return joinMonster(info, ctx, sql => {
+        return query(sql);
+      })
     },
     publicScores: async (_, args, { db }) => {
       const res = await db.query.scoresPublic();
@@ -32,8 +34,6 @@ const resolvers = {
       const res = await db.query.searchScores(phrase);
       return res.rows;
     },
-    myFavourites: async (_, args, { db, user}) =>
-      await db.query.favouriteScores(user.id),
   },
 
   Mutation: {
@@ -92,6 +92,7 @@ const resolvers = {
   Score: {
     favourite: async (parent, _, { db, user }) => {
       if (!user) return null;
+      if (!user.id) return null;
       if (!parent.id) return null;
 
       const res = await query(

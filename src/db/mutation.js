@@ -54,7 +54,7 @@ const createFavourite = (userId, scoreId) => {
     text:
       `INSERT INTO ${FAVOURITE}(${f_user_id}, ${f_score_id}) ` +
       `VALUES($1, $2) ` +
-      `ON CONFLICT (${f_user_id}) DO NOTHING;`,
+      `ON CONFLICT ON CONSTRAINT favourites_pkey DO NOTHING;`,
     values: [userId, scoreId]
   })
 }
@@ -77,7 +77,7 @@ module.exports = {
     if (favourite) {
       return query(createFavourite(userId, scoreId))
     } else {
-      return queue(removeFavourite(userId, scoreId))
+      return query(removeFavourite(userId, scoreId))
     }
   }
 }
