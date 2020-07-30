@@ -8,6 +8,8 @@ const typeDefs = gql`
 
   type Query {
     me: User
+    scores(search: String): [Score!]
+    score(scoreId: Int!): Score
     publicScores: [Score!]
     searchScores(phrase: String!): [Score!]
     myScores: [Score!]
@@ -31,7 +33,7 @@ const typeDefs = gql`
     email: String
     password: String
     favourites(search: String): [Score]
-    uploads: [Score]
+    uploads(search: String): [Score]
   }
 
   input UserInput {
