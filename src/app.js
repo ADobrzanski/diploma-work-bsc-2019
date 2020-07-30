@@ -1,6 +1,9 @@
 const PORT = process.env.PORT || 4000;
 
-const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer, makeExecutableSchema } = require('apollo-server-express');
+const joinMonsterAdapter = require('join-monster-graphql-tools-adapter');
+const { joinMonsterExtendedSchema } = require('./joinMonsterExtendedSchema');
+
 const jwt = require('jsonwebtoken');
 const { existsSync, mkdirSync } = require("fs");
 const express = require("express");
@@ -24,9 +27,11 @@ const getUser = token => {
   }
 }
 
+const schema = makeExecutableSchema({ typeDefs, resolvers })
+joinMonsterAdapter(schema, joinMonsterExtendedSchema)
+
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema,
   context: ({req}) => {
     const tokenWithBearer = req.headers.authorization || '';
     const token = tokenWithBearer.split(' ')[1];

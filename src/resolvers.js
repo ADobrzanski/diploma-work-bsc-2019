@@ -3,9 +3,12 @@ const {
   GraphQLDateTime,
   GraphQLTime
 } = require("graphql-iso-date");
+const { createBatchResolver } = require('graphql-resolve-batch');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { uploadToStorage, getResourceUrl } = require('./storage')
+const { uploadToStorage, getResourceUrl } = require('./storage');
+const { query } = require('./db/connect');
+const joinMonster = require('join-monster').default;
 
 const resolvers = {
   Date: GraphQLDate,
@@ -13,10 +16,18 @@ const resolvers = {
   DateTime: GraphQLDateTime,
 
   Query: {
-    me: async (_, args, { db, user }) => {
-      if (!user){ throw new Error('Not Authenticated'); } 
-      const res = await db.query.getUserById(user.id);
-      return res.rows ? res.rows[0] : null;
+    me: async (_, args, ctx, info) => {
+      if (!ctx.user){ throw new Error('Not Authenticated'); } 
+      const res = await joinMonster(info, ctx, sql => {
+        return query(sql);
+      })
+      console.log(res)
+      return res
+    },
+    scores: async (_, args, ctx, info) => {
+      return await joinMonster(info, ctx, sql => {
+        return query(sql);
+      })
     },
     publicScores: async (_, args, { db }) => {
       const res = await db.query.scoresPublic();
@@ -30,6 +41,11 @@ const resolvers = {
     searchScores: async (_, { phrase }, { db }) => {
       const res = await db.query.searchScores(phrase);
       return res.rows;
+    },
+    score: async (_, args, ctx, info) => {
+      return await joinMonster(info, ctx, sql => {
+        return query(sql);
+      });
     }
   },
 
@@ -64,7 +80,7 @@ const resolvers = {
       )
       return {
         token,
-        user: foundUser,
+        user: { ...foundUser, password: null },
       }
     },
     uploadScore: async (_, { score, file }, { db, user }) => {
@@ -81,9 +97,29 @@ const resolvers = {
 
       return result.rows ? result.rows[0] : null;
     },
+    setFavourite: async (_, { scoreId, favourite }, { db, user }) => {
+      return await db.mutation.setFavourite(user.id, scoreId, favourite);
+    }
   },
 
   Score: {
+    favourite: createBatchResolver(async (scores, args, { db, user }) => {
+      if (!user) {
+        return scores.map(_ => false);
+      } else {
+        const scoreIds = scores.map(score => score.id);
+        const dollars = scoreIds.map((_, idx) => `$${idx+2}`).join(', ');
+        const favourites = await query({
+          text:
+            `SELECT score_id FROM favourites`+
+            ` WHERE score_id IN (${dollars}) AND user_id = $1`,
+          values: [user.id, ...scoreIds],
+        }).then(({ rows }) => rows.map(fav => fav.score_id))
+        .catch(console.error);
+
+        return scores.map(score => favourites.includes(score.id));
+      }
+    }),
     owner: async (parent, _, { db }) => {
       const res = await db.query.getUserById(parent.owner_id)
       return res.rows ? res.rows[0] : null;

@@ -3,6 +3,7 @@ const tables = {
   SCORE: 'scores',
   CREDENTIAL: 'credentials',
   SHARE: 'shares',
+  FAVOURITE: 'favourites',
 }
 
 const {
@@ -10,6 +11,7 @@ const {
   SCORE,
   CREDENTIAL,
   SHARE,
+  FAVOURITE
 } = tables;
 
 const schemaOf = {
@@ -37,6 +39,10 @@ const schemaOf = {
   [SHARE]: {
     f_score_id: 'score_id',
     f_user_id: 'user_id',
+  },
+  [FAVOURITE]: {
+    f_user_id: 'user_id',
+    f_score_id: 'score_id',
   },
 }
 

@@ -9,7 +9,7 @@ const uploadToAPIServer = async (stream) => {
   const filename = uuidv4();
   await new Promise((resolve, reject) =>
     stream
-      .pipe(createWriteStream(path.join(__dirname, "./scores", filename )))
+      .pipe(createWriteStream(path.join(__dirname, "../scores", filename )))
       .on("finish", () => resolve())
       .on('error', reject)
   );
@@ -18,7 +18,7 @@ const uploadToAPIServer = async (stream) => {
 }
 
 const PORT = process.env.PORT || 4000;
-const getLocalResourceUrl = object_key => `http://localhost:${PORT}/${object_key}`
+const getLocalResourceUrl = object_key => `http://localhost:${PORT}/scores/${object_key}`
 
 const uploadToAWSbucket = async (stream) => {
   const filename = uuidv4();

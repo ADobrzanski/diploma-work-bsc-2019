@@ -1,12 +1,15 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
+  scalar Upload
   scalar Date
   scalar Time
   scalar DateTime
 
   type Query {
     me: User
+    scores(search: String): [Score!]
+    score(scoreId: Int!): Score
     publicScores: [Score!]
     searchScores(phrase: String!): [Score!]
     myScores: [Score!]
@@ -16,6 +19,7 @@ const typeDefs = gql`
     register(name: String! email: String! password: String!): User!
     login(name: String! password: String!): LoginResponse!
     uploadScore(score: ScoreInput! file: Upload!): Score!
+    setFavourite(scoreId: Int! favourite: Boolean!): Score!
   }
 
   type LoginResponse {
@@ -25,18 +29,15 @@ const typeDefs = gql`
 
   type User {
     id: ID
-    createdAt: DateTime
-    updatedAt: DateTime
     name: String
     email: String
     password: String
-    uploads: [Score]
-    sharedWith: [Score]
-    public: Boolean
+    favourites(search: String): [Score]
+    uploads(search: String): [Score]
   }
 
   input UserInput {
-    id: ID
+    id: ID #TODO - remove?
     name: String
     email: String
     password: String
@@ -45,16 +46,15 @@ const typeDefs = gql`
 
   type Score {
     id: ID
-    createdAt: DateTime
-    updatedAt: DateTime
     title: String
     subtitle: String
     composer: String
     lyricist: String
     owner: User
     private: Boolean
+    favourite: Boolean
     sharedTo: [User]
-    object_key: String
+    object_key: String #TODO - remove?
     link: String
   }
 

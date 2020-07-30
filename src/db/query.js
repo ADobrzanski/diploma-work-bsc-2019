@@ -1,6 +1,6 @@
 const { query } = require('./connect')
 const { tables, schemaOf } = require('./model')
-const { USER, SCORE, CREDENTIAL } = tables;
+const { USER, SCORE, CREDENTIAL, FAVOURITE } = tables;
 
 const getUserById = id => ({
   text: `SELECT * FROM ${USER} WHERE ${schemaOf[USER].f_id} = $1`,
@@ -22,7 +22,9 @@ const getUserWithCredentials = name => {
 }
 
 const scoresPublic = () => ({
-  text: `SELECT * FROM ${SCORE} WHERE ${schemaOf[SCORE].f_isPrivate} = $1`,
+  text:
+    `SELECT * FROM ${SCORE} S ` +
+    `WHERE ${schemaOf[SCORE].f_isPrivate} = $1;`,
   values: [false]
 })
 
@@ -42,8 +44,17 @@ const scoresByOwnerId = (id) => ({
   values: [id]
 })
 
+const getFavouriteScores = (userId) => ({
+  text: 
+    `SELECT * FROM ${SCORE} S ` +
+    `INNER JOIN ${FAVOURITE} F ON (S.${schemaOf[SCORE].id} = F.${schemaOf[FAVOURITE].f_score_id}) ` +
+    `WHERE S.${schemaOf[SCORE].f_ownerId} = $1`,
+  values: [userId]
+})
+
 module.exports = {
   getUserById(id) { return query(getUserById(id)); },
+  favouriteScores(userId) { return query(getFavouriteScores(userId)); },
   scoresPublic() { return query(scoresPublic()); },
   searchScores(phrase) { return query(searchScores(phrase)); },
   scoresByOwnerId(id) { return query(scoresByOwnerId(id)); },
